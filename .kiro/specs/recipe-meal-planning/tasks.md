@@ -1,0 +1,359 @@
+# Implementation Plan
+
+- [ ] 1. Set up project structure and development environment
+  - [ ] 1.1 Initialize monorepo with frontend and backend directories
+    - Create root package.json with workspace configuration
+    - Set up TypeScript configuration for both frontend and backend
+    - Configure ESLint and Prettier for code quality
+    - _Requirements: All_
+  - [ ] 1.2 Set up Docker Compose for local development
+    - Create docker-compose.yml with PostgreSQL service
+    - Configure environment variables for local development
+    - Create .env.example files for both frontend and backend
+    - _Requirements: All_
+  - [ ] 1.3 Initialize frontend React application with Vite
+    - Set up React 18 with TypeScript
+    - Configure React Router for navigation
+    - Install and configure Axios for API communication
+    - Set up CSS Modules
+    - _Requirements: All_
+  - [ ] 1.4 Initialize backend Express application
+    - Set up Express with TypeScript
+    - Configure PostgreSQL client (pg)
+    - Install JWT and bcrypt dependencies
+    - Create basic server entry point
+    - _Requirements: All_
+
+- [ ] 2. Implement database schema and migrations
+  - [ ] 2.1 Create database migration scripts
+    - Write SQL migration for users table
+    - Write SQL migration for recipes table with tags array
+    - Write SQL migration for meal_plans table
+    - Create indexes for performance optimization
+    - _Requirements: 1.3, 1.4, 9.2_
+  - [ ] 2.2 Create database connection module
+    - Implement PostgreSQL connection pool
+    - Add connection error handling and retry logic
+    - Create database initialization script
+    - _Requirements: All_
+
+- [ ] 3. Implement authentication system
+  - [ ] 3.1 Create authentication service and middleware
+    - Implement user registration with password hashing using bcrypt
+    - Implement login with JWT token generation
+    - Create authenticate middleware for protected routes
+    - Create requireAdmin middleware for admin routes
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
+  - [ ] 3.2 Create authentication API endpoints
+    - Implement POST /api/auth/register endpoint
+    - Implement POST /api/auth/login endpoint
+    - Implement GET /api/auth/me endpoint
+    - Add request validation for authentication endpoints
+    - _Requirements: 9.1, 9.2, 9.3, 9.4_
+  - [ ] 3.3 Create frontend authentication components
+    - Implement RegisterForm component with email and password fields
+    - Implement LoginForm component
+    - Create AuthProvider context for authentication state management
+    - Implement token storage in localStorage
+    - Create ProtectedRoute wrapper component
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
+  - [ ] 3.4 Write authentication tests
+    - Create unit tests for password hashing and JWT generation
+    - Write integration tests for registration and login endpoints
+    - Test authentication middleware with valid and invalid tokens
+    - _Requirements: 9.1, 9.2, 9.3, 9.4_
+
+- [ ] 4. Implement recipe management backend
+  - [ ] 4.1 Create recipe service layer
+    - Implement createRecipe function with validation
+    - Implement getRecipes function with user filtering
+    - Implement getRecipeById function
+    - Implement updateRecipe function
+    - Implement deleteRecipe function
+    - Implement searchRecipes function with text and tag filtering
+    - _Requirements: 1.1, 1.3, 1.4, 1.5, 1.6, 2.1, 2.2, 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3, 4.4, 8.1, 8.2, 8.3, 8.4, 8.5_
+  - [ ] 4.2 Create recipe API endpoints
+    - Implement GET /api/recipes endpoint with authentication
+    - Implement GET /api/recipes/:id endpoint
+    - Implement POST /api/recipes endpoint with validation
+    - Implement PUT /api/recipes/:id endpoint
+    - Implement DELETE /api/recipes/:id endpoint
+    - Implement GET /api/recipes/search endpoint with query parameters
+    - Add error handling for all endpoints
+    - _Requirements: 1.1, 1.3, 1.4, 1.5, 2.1, 2.2, 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3, 4.4, 8.1, 8.2, 8.3, 8.4, 8.5_
+  - [ ] 4.3 Write recipe backend tests
+    - Create unit tests for recipe service functions
+    - Write integration tests for recipe CRUD endpoints
+    - Test search and filter functionality
+    - Test authorization (users can only access their own recipes)
+    - _Requirements: 1.1, 1.3, 2.1, 3.1, 4.1, 8.1, 8.2, 8.3, 8.4_
+
+- [ ] 5. Implement recipe management frontend
+  - [ ] 5.1 Create recipe form component
+    - Implement RecipeForm component with React Hook Form
+    - Add input fields for title, ingredients, instructions, preparation time
+    - Implement tag selection with predefined options (kid-friendly, gluten-free, low-carb, sunday-dinner, vegetarian, vegan, dairy-free)
+    - Add form validation for required fields
+    - Handle form submission with API call
+    - Display success/error messages
+    - _Requirements: 1.1, 1.2, 1.5, 1.6, 1.7, 3.1, 3.2_
+  - [ ] 5.2 Create recipe list and card components
+    - Implement RecipeList component to display all recipes
+    - Create RecipeCard component showing title, prep time, and tags
+    - Implement alphabetical sorting by title
+    - Add loading state and error handling
+    - _Requirements: 2.1, 2.2, 2.3, 2.4_
+  - [ ] 5.3 Create recipe detail component
+    - Implement RecipeDetail component showing full recipe information
+    - Add edit button that opens RecipeForm in edit mode
+    - Add delete button with confirmation dialog
+    - Handle recipe updates and deletions with API calls
+    - Update UI after successful operations
+    - _Requirements: 2.2, 3.1, 3.2, 3.3, 3.4, 4.1, 4.2, 4.3, 4.4_
+  - [ ] 5.4 Create recipe search and filter component
+    - Implement RecipeSearch component with search input
+    - Add tag filter checkboxes for all available tags
+    - Implement debounced search to reduce API calls
+    - Update RecipeList based on search and filter criteria
+    - Display "no results" message when appropriate
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
+  - [ ] 5.5 Write recipe frontend tests
+    - Create unit tests for form validation logic
+    - Test RecipeCard and RecipeList rendering
+    - Test search and filter functionality
+    - _Requirements: 1.1, 2.1, 8.1, 8.2_
+
+- [ ] 6. Implement meal planning backend
+  - [ ] 6.1 Create meal plan service layer
+    - Implement createMealPlan function with validation
+    - Implement getMealPlans function with date range filtering
+    - Implement updateMealPlan function
+    - Implement deleteMealPlan function
+    - Add unique constraint handling for user/date/meal_time
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 6.3, 6.4, 7.1, 7.2, 7.3, 7.4_
+  - [ ] 6.2 Implement auto-generate meal plan algorithm
+    - Create autoGenerateMealPlan function accepting date range, meal times, and tags
+    - Implement recipe selection logic matching tag criteria
+    - Add variety enforcement to avoid repeating recipes within 7 days
+    - Implement recipe rotation for distribution
+    - Handle insufficient recipes scenario with fallback logic
+    - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6_
+  - [ ] 6.3 Create meal plan API endpoints
+    - Implement GET /api/meal-plans endpoint with date range query params
+    - Implement POST /api/meal-plans endpoint with validation
+    - Implement PUT /api/meal-plans/:id endpoint
+    - Implement DELETE /api/meal-plans/:id endpoint
+    - Implement POST /api/meal-plans/auto-generate endpoint
+    - Add error handling for all endpoints
+    - _Requirements: 5.1, 5.2, 5.3, 6.1, 6.2, 6.3, 7.1, 7.2, 7.3, 7.4, 13.1, 13.2, 13.3, 13.4, 13.5, 13.6_
+  - [ ] 6.4 Write meal plan backend tests
+    - Create unit tests for meal plan service functions
+    - Write unit tests for auto-generate algorithm
+    - Write integration tests for meal plan CRUD endpoints
+    - Test auto-generate endpoint with various criteria
+    - Test variety enforcement in auto-generation
+    - _Requirements: 5.1, 6.1, 7.1, 13.1, 13.2, 13.3, 13.4_
+
+- [ ] 7. Implement meal planning frontend
+  - [ ] 7.1 Create meal plan calendar component
+    - Implement MealPlanCalendar component with calendar view
+    - Display meal plans for at least 7 days
+    - Show recipe titles and meal times for each entry
+    - Add loading state and error handling
+    - _Requirements: 6.1, 6.2, 6.3, 6.4_
+  - [ ] 7.2 Create meal plan form component
+    - Implement MealPlanForm component for manual entry
+    - Add date picker and meal time selector
+    - Display available recipes for selection
+    - Handle form submission with API call
+    - _Requirements: 5.1, 5.2, 5.3, 5.4_
+  - [ ] 7.3 Create meal plan entry component
+    - Implement MealPlanEntry component for individual entries
+    - Add edit and delete buttons
+    - Implement confirmation dialog for deletion
+    - Handle updates and deletions with API calls
+    - Update calendar view after operations
+    - _Requirements: 7.1, 7.2, 7.3, 7.4_
+  - [ ] 7.4 Create auto-generate form component
+    - Implement AutoGenerateForm component
+    - Add date range picker (start and end date)
+    - Add meal time checkboxes (breakfast, lunch, dinner)
+    - Add tag filter options
+    - Handle auto-generate API call
+    - Display generated meal plan for review
+    - Allow regeneration with different criteria
+    - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6_
+  - [ ] 7.5 Write meal planning frontend tests
+    - Create unit tests for date formatting utilities
+    - Test MealPlanCalendar rendering
+    - Test auto-generate form validation
+    - _Requirements: 5.1, 6.1, 13.1_
+
+- [ ] 8. Implement admin functionality backend
+  - [ ] 8.1 Create admin service layer
+    - Implement getAllUsers function
+    - Implement disableUser function
+    - Implement deleteUser function with cascade deletion
+    - Implement getStatistics function for dashboard
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 11.1, 11.2, 11.3, 11.4, 12.1, 12.2, 12.3, 12.4_
+  - [ ] 8.2 Create admin API endpoints
+    - Implement GET /api/admin/users endpoint with requireAdmin middleware
+    - Implement PUT /api/admin/users/:id/disable endpoint
+    - Implement DELETE /api/admin/users/:id endpoint
+    - Implement GET /api/admin/statistics endpoint
+    - Add error handling for all endpoints
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 11.1, 11.2, 11.3, 11.4, 12.1, 12.2, 12.3, 12.4_
+  - [ ] 8.3 Write admin backend tests
+    - Create unit tests for admin service functions
+    - Write integration tests for admin endpoints
+    - Test admin authorization (non-admin users cannot access)
+    - Test user disable and delete operations
+    - _Requirements: 10.1, 10.2, 10.3, 11.1, 11.2, 11.3, 12.1_
+
+- [ ] 9. Implement admin functionality frontend
+  - [ ] 9.1 Create admin dashboard component
+    - Implement AdminDashboard component
+    - Display total users, recipes, and meal plans
+    - Show user registration statistics for past 30 days
+    - Add loading state and error handling
+    - _Requirements: 12.1, 12.2, 12.3, 12.4_
+  - [ ] 9.2 Create user management component
+    - Implement UserManagement component
+    - Display list of all users with email and registration date
+    - Add disable and delete buttons for each user
+    - Implement confirmation dialogs for actions
+    - Handle API calls for disable and delete operations
+    - Update user list after operations
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 11.1, 11.2, 11.3, 11.4_
+  - [ ] 9.3 Create admin route protection
+    - Implement AdminRoute wrapper component
+    - Check user role before rendering admin components
+    - Redirect non-admin users to home page
+    - _Requirements: 10.3, 12.3_
+  - [ ] 9.4 Write admin frontend tests
+    - Test AdminDashboard rendering with mock data
+    - Test UserManagement component actions
+    - Test AdminRoute authorization logic
+    - _Requirements: 10.1, 10.2, 11.1, 12.1_
+
+- [ ] 10. Create Docker configuration
+  - [ ] 10.1 Create frontend Dockerfile
+    - Write multi-stage Dockerfile for React build
+    - Configure Nginx to serve static files
+    - Create nginx.conf with API proxy configuration
+    - _Requirements: All_
+  - [ ] 10.2 Create backend Dockerfile
+    - Write Dockerfile for Node.js Express application
+    - Configure production dependencies only
+    - Set up proper environment variable handling
+    - _Requirements: All_
+  - [ ] 10.3 Create .dockerignore files
+    - Add node_modules, .git, and other unnecessary files
+    - Optimize build context size
+    - _Requirements: All_
+
+- [ ] 11. Set up AWS infrastructure with Terraform or AWS CDK
+  - [ ] 11.1 Create VPC and networking resources
+    - Define VPC with public and private subnets
+    - Create security groups for ALB, ECS, and RDS
+    - Configure NAT gateway for private subnet internet access
+    - _Requirements: All_
+  - [ ] 11.2 Create RDS PostgreSQL instance
+    - Define RDS instance with PostgreSQL 14+
+    - Configure instance class (db.t3.micro)
+    - Enable automated backups with 7-day retention
+    - Enable storage auto-scaling up to 100 GB
+    - Set up security group allowing access from ECS tasks only
+    - _Requirements: All_
+  - [ ] 11.3 Create ECR repositories
+    - Create ECR repository for frontend images
+    - Create ECR repository for backend images
+    - Configure lifecycle policies for image cleanup
+    - _Requirements: All_
+  - [ ] 11.4 Create ECS cluster and task definitions
+    - Define ECS Fargate cluster
+    - Create task definition for frontend container (512 CPU, 1024 MB memory)
+    - Create task definition for backend container (512 CPU, 1024 MB memory)
+    - Configure environment variables for backend
+    - Set up CloudWatch log groups for containers
+    - _Requirements: All_
+  - [ ] 11.5 Create Application Load Balancer
+    - Define ALB with public subnets
+    - Create target groups for frontend and backend
+    - Configure listener rules for routing
+    - Set up health checks
+    - _Requirements: All_
+  - [ ] 11.6 Create ECS services with auto-scaling
+    - Define ECS service for frontend
+    - Define ECS service for backend
+    - Configure auto-scaling policies (CPU target 70%, min 2, max 10 tasks)
+    - Set up service discovery if needed
+    - _Requirements: All_
+  - [ ] 11.7 Create CloudFront distribution
+    - Define CloudFront distribution with ALB as origin
+    - Configure cache behaviors for static assets and API
+    - Set up SSL certificate with ACM
+    - Enable compression (gzip, brotli)
+    - _Requirements: All_
+
+- [ ] 12. Set up CI/CD pipeline with GitHub Actions
+  - [ ] 12.1 Create GitHub Actions workflow file
+    - Define workflow triggers (push to main branch)
+    - Set up job for build and test
+    - Configure AWS credentials from GitHub secrets
+    - _Requirements: All_
+  - [ ] 12.2 Add build and test steps
+    - Add steps for linting and type checking
+    - Add steps for running unit tests
+    - Add steps for building Docker images
+    - _Requirements: All_
+  - [ ] 12.3 Add ECR push steps
+    - Authenticate with AWS ECR
+    - Tag images with commit SHA and 'latest'
+    - Push frontend and backend images to ECR
+    - _Requirements: All_
+  - [ ] 12.4 Add ECS deployment steps
+    - Update ECS task definitions with new image tags
+    - Update ECS services to trigger deployment
+    - Wait for deployment to stabilize
+    - Add smoke tests to verify deployment
+    - _Requirements: All_
+  - [ ] 12.5 Configure CloudFront cache invalidation
+    - Add step to invalidate CloudFront cache after deployment
+    - Target specific paths that need invalidation
+    - _Requirements: All_
+
+- [ ] 13. Add monitoring and logging
+  - [ ] 13.1 Configure CloudWatch alarms
+    - Create alarms for ECS CPU and memory utilization
+    - Create alarms for RDS CPU and storage
+    - Create alarms for ALB error rates
+    - Set up SNS topic for alarm notifications
+    - _Requirements: All_
+  - [ ] 13.2 Set up centralized logging
+    - Configure CloudWatch log groups for all services
+    - Set up log retention policies
+    - Create log insights queries for common debugging scenarios
+    - _Requirements: All_
+  - [ ] 13.3 Enable access logging
+    - Enable ALB access logs to S3
+    - Enable CloudFront access logs
+    - Configure RDS performance insights
+    - _Requirements: All_
+
+- [ ] 14. Create application documentation
+  - [ ] 14.1 Write README with setup instructions
+    - Document local development setup with Docker Compose
+    - Explain environment variable configuration
+    - Provide instructions for running tests
+    - _Requirements: All_
+  - [ ] 14.2 Document API endpoints
+    - Create API documentation for all endpoints
+    - Include request/response examples
+    - Document authentication requirements
+    - _Requirements: All_
+  - [ ] 14.3 Create deployment guide
+    - Document AWS infrastructure setup
+    - Explain CI/CD pipeline configuration
+    - Provide troubleshooting tips
+    - _Requirements: All_
